@@ -144,8 +144,8 @@ have no DSP counterpart to reuse.
 
 1. **The tap's price.** The first implementation charged the tap on both cores whenever its engine was placed,
    Sidechain alone included. Main charges nothing for Sidechain's tap, and that charge (41 executed instructions a
-   sample a core, 72 at 7/4) is a fifth of core 0's headroom over eight stock slots (allowance 3,120, reserve 342 a
-   slot): Sidechain could have been refused where main admits it. Now the tap is charged only while a live package
+   sample a core, 72 at 7/4) was a fifth of core 0's headroom over eight stock slots (allowance 3,120, reserve 342 a
+   slot until beta finding 34 charged each slot its bank's dearest stock effect): Sidechain could have been refused where main admits it. Now the tap is charged only while a live package
    *requires* the key bus; Sidechain alone is admitted and charged exactly as on main. (The tap's cost with Sidechain
    alone stays uncharged, as on main.)
 2. **The gated follow-up needs a new layout.** Its want words (`+$3DF6..+$3DFD`) meet E-Verb 0.1.2's and Mini Verb

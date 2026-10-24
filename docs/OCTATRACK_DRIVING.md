@@ -94,6 +94,7 @@ error and moves on. macOS `nc -U` hangs up before the reply, so use the script.
 | `screen` | the screen as block characters (thousands of tokens; avoid) |
 | `crash` | the last crash record (vector, PC, registers); `crashtest` makes one |
 | `selftest` | PROJ > MODWERK > SELF TEST over USB: start it (transport stopped), wait, print the verdict, the modules that ran and the CPU and core peaks |
+| `selftest:trace` | the same, printing each half second's phase, progress, the CPU the test recorded and the meter's latest window beside it: what a CPU or core peak came from |
 | `stall` | the last DSP stall record: why, the loader's whole report, each core's last packet header, the live FX ids, as they stood when the stall was seen (it survives the power cycle); `stalltest` writes one now |
 | `guard`, `guard:MILLE` | the frame guard since the last read: the frame interrupt's longest frame, latest start and share of the CPU, the machine renders it skipped and on which tracks, and its share; `guard:MILLE` sets the share (per mille of a frame, `guard:65535` turns it off) |
 | `try FILE`, `remove FILE` | install or remove a module package, accepted at once |
@@ -126,7 +127,7 @@ error and moves on. macOS `nc -U` hangs up before the reply, so use the script.
 | What | Where |
 |---|---|
 | current track, Part | byte `0x80000000`, byte `0x80000003` |
-| what each track runs (FX1 T1-8, then FX2) | 16 bytes at `0x80000ec4`; a Part's effects reach it at each track's next trig while playing, not at a stopped pattern change. A track without trigs keeps the last bank's effect (16 October 2026, twin of `38a0bde1`: B01's DELAY never reached trigless tracks that ran DARK REV), so test a pick's admission on tracks with trigs or in a blank project. A trigless track keeps the last bank's machine too: from bank A (Analog BD on T1) to bank B, T1 kept rendering Analog BD and asking for its lease (22 October 2026, twin `df19fdca`); a RELOAD of bank B's Part, then bank C, cleared it |
+| what each track runs (FX1 T1-8, then FX2) | 16 bytes at `0x80000ec4`; a Part's effects reach it at each track's next trig while playing, not at a stopped pattern change. A track without trigs keeps the last bank's effect (16 October 2026, twin of `38a0bde1`: B01's DELAY never reached trigless tracks that ran DARK REV), so test a pick's admission on tracks with trigs or in a blank project. A trigless track keeps the last bank's machine too: from bank A (Analog BD on T1) to bank B, T1 kept rendering Analog BD and asking for its lease (22 October 2026, twin `df19fdca`); a RELOAD of bank B's Part, then bank C, cleared it. On 24 October 2026 (twin of `f14e7fa3`, stopped) a RELOAD did not: switching to another Part and back (`part2 part1`) applied the Part's effects, and `pick:` of the effect the Part already names leaves the live slot as it is (it times out) |
 | current bank | `0x46c82456` holds its base: `0x400e21e0 + bank * 0x9b340` |
 | a working Part's effects | 16 bytes at bank base `+ 0x8ed80 + part * 6322` (the whole Part is 6,322 bytes) |
 | the saved copy | bank base `+ 0x9504a + part * 6322` |

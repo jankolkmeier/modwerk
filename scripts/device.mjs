@@ -326,14 +326,16 @@ async function run(sequence, until = Infinity) { // serve: past its time limit a
     // RELOAD from the Part menu, which keeps its cursor and stops at RENAME. Never PART+FUNC+PLAY: that is CLEAR.
     else if (step === 'reload') await run('FUNC+PART w600 UP w150 UP w150 UP w150 DOWN w200 YES w1000')
     else if ((m = /^hold:(\d)$/.exec(step))) await devIn(22, Number(m[1]), 1) // development bases: host frames wait N seconds, as after a boot
-    else if (step === 'selftest') { // dsp.c's self-test (PROJ > MODWERK > SELF TEST): started, then read until it is done
+    else if (step === 'selftest' || step === 'selftest:trace') { // dsp.c's self-test (PROJ > MODWERK > SELF TEST): started, then read until it is done
+      // :trace prints each read beside the CPU meter's latest half-second window (development bases), to see what a peak was
+      const trace = step.endsWith(':trace') && (async (r, t0) => { const w = await statusWords(); console.log(`  ${((Date.now() - t0) / 1000).toFixed(1)} s phase ${r.phase} done ${r.done}/${r.total} ran ${r.ran} cpu now ${w(66)} recorded ${r.cpu} T1-4 ${w(70)} T5-8 ${w(68)}`) })
       const read = async go => { const b = Buffer.from(await devIn(21, go, 96)); return { state: b.readUInt32BE(0), phase: b.readUInt32BE(4), failed: b.readUInt32BE(8),
         modules: b.readUInt32BE(12), dsp: b.readUInt32BE(16), intact: b.readUInt32BE(20), ran: b.readUInt32BE(24), peak: [b.readUInt32BE(28), b.readUInt32BE(32)],
         cpu: b.readUInt32BE(36), done: b.readUInt32BE(40), total: b.readUInt32BE(44), track: [...b.subarray(48, 56)], gap: b.readUInt32BE(56),
         saved: b.readUInt32BE(60), savedCount: b.readUInt32BE(64), live: b.readUInt32BE(68), culprit: b.subarray(76, 92).toString('latin1').replace(/\0.*$/s, '') } }
       let r = await read(1)
       if (r.state !== 1) throw new Error('The self-test did not start: stop the transport, and let the loader finish.')
-      for (const start = Date.now(); r.state === 1 && Date.now() - start < 120000; await wait(500)) r = await read(0)
+      for (const start = Date.now(); r.state === 1 && Date.now() - start < 120000; await wait(500)) { r = await read(0); if (trace) await trace(r, start) }
       const why = ['a module broken', 'refused under load', 'frames stopped', 'a core over 90 %', 'loader errors or a stall', 'tracks not back', 'stopped', 'a module did not run alone', 'the CPU over 90 %', 'a frame late', 'code damaged'].filter((_, i) => r.failed >> i & 1)
       console.log(`selftest ${['idle', 'running', 'passed', 'failed'][r.state]}${why.length ? ': ' + why.join(', ') : ''}${r.culprit ? ' (' + r.culprit + ')' : ''}; modules ${r.intact}/${r.modules} intact, ${r.dsp} with DSP effects; ` +
         `together ${r.ran}/${r.dsp} ran (last batch ${r.track.map(id => id ? '0x' + id.toString(16) : '-').join(' ')}), peaks CPU ${r.cpu / 10}% T1-4 ${r.peak[0] / 10}% T5-8 ${r.peak[1] / 10}%; longest frame ${(r.gap / 132).toFixed(0)} us; card set ${r.saved}, ${r.savedCount}/${r.live}`)

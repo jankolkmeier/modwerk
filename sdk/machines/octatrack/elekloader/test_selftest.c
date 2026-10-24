@@ -34,6 +34,7 @@ static unsigned failures;
 const fx_set modwerk_fx_modules = {{1u << 26 | 1u << 27 | 1u << 28}};
 #define PLATE 20  /* two stock reverbs loaded on demand, as the beta base loads them: their code takes arena words */
 #define SPRING 21
+#define DJEQ 13   /* resident in this fixture: no code, its own cost */
 struct dl_package dl_catalog[MODWERK_FX_IDS];
 struct code dl_codes[2][MODWERK_FX_IDS];
 const uint16_t modwerk_dsp_arena[2] = {2396, 3269}; /* the beta base's: resident engines take the rest */
@@ -82,10 +83,11 @@ static void manager(void)
     if (observed_valid && !memcmp(observed, modwerk_test_live_fx, 16)) return;
     memcpy(observed, modwerk_test_live_fx, 16), observed_valid = 1;
     uint8_t want[2][MODWERK_FX_IDS] = {{0}};
-    uint32_t cycles[2] = {0, 0};
+    uint32_t cycles[2] = {0, 0}, least[16];
+    modwerk_dsp_slot_floors(modwerk_test_live_fx, least); /* as the allocator's prepare: each slot at least its floor */
     for (unsigned i = 0; i < 16u; ++i) {
         unsigned c = core_of_slot(i), p = modwerk_test_live_fx[i];
-        cycles[c] += dl_catalog[p].cycles;
+        cycles[c] += dl_catalog[p].cycles > least[i] ? dl_catalog[p].cycles : least[i];
         if (!dl_catalog[p].resident) want[c][p] = 1;
     }
     for (unsigned c = 0; c < 2u; ++c) {
@@ -129,6 +131,7 @@ static void run(const uint8_t *part, struct runtime_dsp *fx, unsigned n)
     for (unsigned k = 0; k < MODWERK_FX_IDS; ++k) dl_catalog[k] = (struct dl_package)STOCK;
     dl_catalog[PLATE] = (struct dl_package){900, 1, MODWERK_DSP_RESERVE, 2, 0, 1, 0};
     dl_catalog[SPRING] = (struct dl_package){1063, 1, MODWERK_DSP_RESERVE, 2, 0, 1, 0};
+    dl_catalog[DJEQ].cycles = MODWERK_DSP_RESERVE; /* resident here (no code), at its own cost */
     for (unsigned k = 0; k < n; ++k) modwerk_machine_dsp_switch(&none, &fx[k]);
     modules = n;
     memcpy(modwerk_test_live_fx, part, 16), the_part = part;
@@ -191,13 +194,14 @@ int main(void)
     run(crowded0, pair, 2);
     CHECK(modwerk_selftest.state == SELFTEST_PASSED && !modwerk_selftest.failed && modwerk_selftest.ran == 2);
     CHECK(sums >= 2u);
-    /* Two that together pass core 0's cycles (8 x 342 floor, each module 258 more: 3,252 of 3,120), the second's code
-     * still bound on core 0 from an earlier run: refused beside the first, it must not count as run there. It waits
-     * for the next batch and runs alone (the owner's MKII, E-Verb beside Air Chorus, failed as refused under load). */
-    const uint8_t blank[16] = {0};
+    /* Two that together pass core 0's cycles (each slot's floor 342, DJ EQ in every Part, each module 258 more: 3,252
+     * of 3,120), the second's code still bound on core 0 from an earlier run: refused beside the first, it must not
+     * count as run there. It waits for the next batch and runs alone (the owner's MKII, E-Verb beside Air Chorus,
+     * failed as refused under load). */
+    const uint8_t blank[16] = {0}, eq[16] = {DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ, DJEQ};
     struct runtime_dsp heavy[2] = {verb, module(26, 400, 600, 0x5678u, "Small")};
     cached[0][27] = 1; /* Small goes first; the E-Verb-sized one is the refused second */
-    run(blank, heavy, 2);
+    run(eq, heavy, 2);
     cached[0][27] = 0;
     CHECK(modwerk_selftest.state == SELFTEST_PASSED && !modwerk_selftest.failed && modwerk_selftest.ran == 2);
     CHECK(modwerk_selftest.track[4] == 27 && !modwerk_selftest.track[5] && dl_residency_failures >= 1u); /* last batch: alone, T5 */
