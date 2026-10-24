@@ -3,7 +3,8 @@ import { DEVELOPMENT_DISCORD_URL } from '../config/development-discord'
 import { saveFirmware } from '../config/firmware-filename'
 import { BETA_RECOVERY_NOTICE } from '../firmware-notices'
 import { finishBaseInstall, pendingBaseInstall, waitForBaseInstall } from '../config/octatrack-progress'
-import type { BaseUpdateStep, OctatrackLink } from '../engine/elekloader/octatrack-link'
+import { explainLinkError, type BaseUpdateStep, type OctatrackLink } from '../engine/elekloader/octatrack-link'
+import { UploadDeviceError, UploadUnconfirmedError } from '../engine/elekloader/upload-session'
 import { siteUpdated, unitForPrompt } from '../hooks/useBaseInstallPrompt'
 import { baseLayout, isPublishedBase, layoutName, type BaseLayout } from '../engine/elekloader/base-variants'
 import { useOctatrackLink } from '../hooks/useOctatrackLink'
@@ -104,7 +105,12 @@ export function BaseInstallDialog({ link, launch = false, layout, firmwareReady,
       const image = await buildBase!(layout)
       await link.updateBase(new Uint8Array(image.buffer), image.base, (step, fraction) => setUsb({ step, fraction }))
       setUsb({ step: 'done' }); finished.current = true; onReady()
-    } catch (error) { console.error(error); setUsb({ error: error instanceof Error ? error.message : 'The update did not finish.' }) }
+    } catch (error) {
+      console.error(error)
+      // A transport error's own text is for developers ("hello was not confirmed; …"): say it in the link's words.
+      const transport = error instanceof UploadUnconfirmedError || error instanceof UploadDeviceError
+      setUsb({ error: transport ? explainLinkError(error) : error instanceof Error ? error.message : 'The update did not finish.' })
+    }
   }
   async function downloadBase() {
     if (await siteUpdated()) return setOutdated(true)
