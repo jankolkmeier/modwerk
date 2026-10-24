@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "id": "dejavu",
   "key": "DEJAVU",
-  "name": "Dejavu",
+  "name": "Deja Vu",
   "version": "0.1.0-experimental",
   "category": "machines",
   "author": {
@@ -35,31 +35,31 @@
     "conflicts": [],
     "uiClaims": [],
     "limitations": [
-      "One wave (index 19): the shared icon-cell bound limits more",
+      "Three waves (WAVE 19-21: DJV, DJQ, DJC); the WAVE cell's icon bound is raised to 21",
       "Audio-track LFOs only; MIDI-track LFOs keep 19 waves",
-      "Not an exact semitone grid on PTCH (about 20 cents per value at full DEP)",
-      "Opened without the module, a WAVE 19 LFO plays SAW and draws a garbage WAVE icon",
-      "Not yet tested on hardware"
+      "DJQ snaps PTCH to root, fifth and octaves (no scale setting); DJV and DJC move in 1/5-semitone knob steps",
+      "Opened without the module, an LFO on WAVE 19-21 plays SAW and the WAVE cell reads past stock's tables (not yet run on hardware)",
+      "First hardware use reported on one MKII over USB; not yet qualified"
     ]
   },
   "resources": {
     "recorded": "ot_emu and the runtime package build, 24 Oct 2026 (see TESTING.md)",
     "storage": {
       "label": "Storage",
-      "display": "912 bytes code and data + 1,824 bytes state (24 LFOs)",
-      "value": 2736,
+      "display": "2,668 bytes code and data + 2,784 bytes state (24 LFOs x 116)",
+      "value": 5452,
       "unit": "bytes",
       "method": "static",
-      "conditions": "USB runtime package build (tools/packages/build.sh); the card build links the same unit",
+      "conditions": "USB runtime package build (dejavu.mwrm, module ede213c6); the card build links the same unit",
       "source": "TESTING.md"
     },
     "processing": {
       "label": "CPU load",
-      "display": "about 580 instructions/frame average with 24 DJV LFOs (0.6 % CPU)",
-      "value": 580,
-      "unit": "instructions/frame",
+      "display": "0.15-0.17 % of the ColdFire with all 24 LFOs on DJV, DJQ or DJC",
+      "value": 0.17,
+      "unit": "%",
       "method": "emulator",
-      "conditions": "ot_emu, all 24 audio-track LFOs on DJV, every track trigging; worst all-trig frame estimated 2.5 %",
+      "conditions": "ot_emu coverage, all 24 audio-track LFOs on one wave, every track trigging every step, TRIG FREE (DJC also ONE); less than the same LFOs on stock RND",
       "source": "TESTING.md"
     }
   },
@@ -77,7 +77,7 @@
   "license": {
     "spdx": "MIT",
     "file": "LICENSE",
-    "declaration": "Replace with accurate authorship, attribution and original/licensed source and media rights. Never include Elektron firmware, extracted routines or tables."
+    "declaration": "Original work by Jan Kolkmeier, MIT (LICENSE). The UI screenshots are ot_emu framebuffer captures under LicenseRef-OT-UI-Documentation. No Elektron firmware, extracted routines or tables: stock sites are named by address and SHA-256 only."
   },
   "media": [
     {

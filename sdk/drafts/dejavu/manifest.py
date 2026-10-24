@@ -72,7 +72,7 @@ MODULE = Module(
     name="dejavu",
     key="DEJAVU",
     kind=Kind.CF_PATCH,
-    doc="DEJA VU (draft): audio-track LFO waveform DJV, per-trig random values with a looping memory.",
+    doc="DEJA VU (draft): audio-track LFO waves DJV, DJQ and DJC, a loop of random values that replay or renew by chance.",
     category=Category.TRACK, author="jankolkmeier", author_url="https://github.com/jankolkmeier",
     proof=Proof.CHECK, proof_note="draft; emulator, and first use on one MKII over USB (reported)",
     linked=(UNIT,),

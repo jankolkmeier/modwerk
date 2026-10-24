@@ -15,6 +15,8 @@ Reported by the developer while playing (not measured):
 | DEP p-locked to 0 on one trig (with a PTCH lock) | that step plays the locked pitch, unaffected by the LFO |
 | DJQ, chromatic version (since replaced) | hard to tell from DJV by ear; measured why (25 cents on average) and replaced by root + fifth |
 
+Review fix after this hardware use (PR #869, finding 1): PLAY now counts as a step, so FREE and HOLD play bar 1 exactly as bar 2 (verify.py covers 1-, 2- and 16-step tracks and both counter states at PLAY); not yet run on the unit.
+
 Not tested on hardware: DJQ root + fifth (loaded, not yet played), DJC by ear, CPU load (CUE + PROJ), the self-test with Deja Vu, power-cycle restore of the kept set, a project with WAVE 19-21 opened without the module, trig conditions and one-shot trigs, microtiming in HOLD, Play Modes interplay.
 
 ## Host and emulator

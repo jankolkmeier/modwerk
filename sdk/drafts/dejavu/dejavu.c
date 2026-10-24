@@ -165,19 +165,21 @@ int32_t dv_call(dv_lfo *s, int trig, unsigned deja, unsigned mult, unsigned mode
     was_run = (s->seen >> 16) & 1;
     was_ctr = (s->seen >> 8) & 0xFF;
     was_tick = s->seen & 0xFF;
-    stepped = ctr != was_ctr || (tick == 0 && was_tick != 0);  /* a step is due (a 1-step track only shows the tick) */
+    /* a step is due: PLAY, the counter moving, or (a 1-step track only shows
+     * it) the tick returning to 0 */
+    stepped = (run && !was_run) || ctr != was_ctr || (tick == 0 && was_tick != 0);
     shown = tick == 1 && was_tick != 1;                  /* the step's audible start */
-    if (stepped && ctr)
-        s->lastnz = (uint8_t)ctr;
-    /* pattern position mod LEN: the counter shows 0 on the track's last step,
-     * whose position is the counter before it (length - 1) */
-    slot = (ctr ? ctr - 1u : (unsigned)s->lastnz) & (len - 1u);
-    if (run && !was_run) {                               /* transport start */
+    if (run && !was_run) {                               /* transport start, before the step below */
         s->rewind = 1;
         s->pos = DV_IDLE;
         s->lastnz = 0;
         s->frames = DV_GLIDE_MAX + 1u;                   /* the first change jumps */
     }
+    if (stepped && ctr)
+        s->lastnz = (uint8_t)ctr;
+    /* pattern position mod LEN: the counter shows 0 on the track's last step,
+     * whose position is the counter before it (length - 1) */
+    slot = (ctr ? ctr - 1u : (unsigned)s->lastnz) & (len - 1u);
     before = s->raw;
     s->raw = 0x7FFFFFFF;                                 /* marks no change this call */
     switch (mode) {
