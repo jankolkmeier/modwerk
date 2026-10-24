@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 2,
+  "id": "dejavu",
+  "key": "DEJAVU",
+  "name": "Dejavu",
+  "version": "0.1.0-experimental",
+  "category": "machines",
+  "author": {
+    "github": "jankolkmeier",
+    "credits": [
+      "jankolkmeier"
+    ]
+  },
+  "nativeManifest": "manifest.py",
+  "presentation": {
+    "label": "DEJA VU",
+    "family": "Modulation",
+    "summary": "Three new LFO waves with a loop of random values you can lock, mutate, snap to root and fifth, or glide.",
+    "overview": "Deja Vu adds DJV, DJQ and DJC to the audio-track LFOs. Each keeps a loop of remembered random values: each visit to a slot replays its value or rolls a new one, DEJA (SPD) sets how often. The TRIG setting picks what moves through the loop: every step (FREE), a step-locked value per trig (HOLD), one slot per trig (ONE), or a trig that restarts it (TRIG, HALF). DJV steps, DJQ plays root, fifth and octaves on PTCH (whole knob steps elsewhere), DJC glides between values.",
+    "highlights": [
+      "SPD sets DEJA (replay probability): p-lock it, put it on a scene, sweep it with the crossfader",
+      "MULT sets the loop length: 1, 2, 4 ... 64; in the step modes the track length gives any length up to 64",
+      "TRIG picks the clock: FREE every step, HOLD one value per step played by trigs, ONE one per trig, TRIG and HALF restart on a trig",
+      "DJQ: root, fifth and octaves on PTCH (DEP sets which are in reach), whole knob steps elsewhere; DJC: smooth glides"
+    ],
+    "usage": [
+      "LFO SETUP: WAVE = DJV, PMTR = PTCH, MULT = 64X, TRIG = HOLD, DEP up; then turn SPD from 0 (fresh) to 127 (locked)"
+    ]
+  },
+  "controls": [],
+  "compatibility": {
+    "firmware": "1.40C",
+    "effectId": null,
+    "location": "Audio tracks",
+    "conflicts": [],
+    "uiClaims": [],
+    "limitations": [
+      "One wave (index 19): the shared icon-cell bound limits more",
+      "Audio-track LFOs only; MIDI-track LFOs keep 19 waves",
+      "Not an exact semitone grid on PTCH (about 20 cents per value at full DEP)",
+      "Opened without the module, a WAVE 19 LFO plays SAW and draws a garbage WAVE icon",
+      "Not yet tested on hardware"
+    ]
+  },
+  "resources": {
+    "recorded": "ot_emu and the runtime package build, 24 Oct 2026 (see TESTING.md)",
+    "storage": {
+      "label": "Storage",
+      "display": "912 bytes code and data + 1,824 bytes state (24 LFOs)",
+      "value": 2736,
+      "unit": "bytes",
+      "method": "static",
+      "conditions": "USB runtime package build (tools/packages/build.sh); the card build links the same unit",
+      "source": "TESTING.md"
+    },
+    "processing": {
+      "label": "CPU load",
+      "display": "about 580 instructions/frame average with 24 DJV LFOs (0.6 % CPU)",
+      "value": 580,
+      "unit": "instructions/frame",
+      "method": "emulator",
+      "conditions": "ot_emu, all 24 audio-track LFOs on DJV, every track trigging; worst all-trig frame estimated 2.5 %",
+      "source": "TESTING.md"
+    }
+  },
+  "tests": {
+    "report": "TESTING.md",
+    "summary": "Host gate (verify.py) and 36 host tests; emulator: the five TRIG modes, DJQ root + fifth to 0.2 cents, DJC glides, trig kinds, ~0.15-0.17 % CPU with 24 LFOs. On one MKII over USB: loads and runs; behaviour reported by the developer, not yet measured.",
+    "hardwareStatus": "reported",
+    "evidenceRevision": "51650eccba43ccd9b9a0c6fb8321f50dff9da5e3",
+    "gates": [
+      "Worst-case cycles under parameter modulation and maximum load",
+      "Exact memory region and maximum-instance totals",
+      "Owner-reviewed real-hardware evidence with actual coverage and limitations"
+    ]
+  },
+  "license": {
+    "spdx": "MIT",
+    "file": "LICENSE",
+    "declaration": "Replace with accurate authorship, attribution and original/licensed source and media rights. Never include Elektron firmware, extracted routines or tables."
+  },
+  "media": [
+    {
+      "path": "media/dejavu_lfo_setup.png",
+      "captureType": "emulator",
+      "caption": "LFO SETUP with WAVE = DJV",
+      "alt": "LFO setup page showing the DJV wave icon and label",
+      "credit": "jankolkmeier (headless capture)",
+      "license": "LicenseRef-OT-UI-Documentation",
+      "source": "original",
+      "otUi": {
+        "page": "LFO SETUP",
+        "shows": "location-and-controls",
+        "firmware": "1.40C",
+        "moduleVersion": "0.1.0-experimental",
+        "imageSha256": "5986702c795df569a4671a206fe05e40bc3138a3946b5e0b3a2c20385a03ee9c",
+        "setup": "Headless ot_emu (upstream octabam 8250be0 port); MKII panel; stopped transport; 128x64 LCD, white palette (tools/emu/lcd_view.py)."
+      }
+    },
+    {
+      "path": "media/djq_lfo_setup.png",
+      "captureType": "emulator",
+      "caption": "LFO SETUP with WAVE = DJQ",
+      "alt": "LFO setup page showing the DJQ wave icon: steps on a dotted grid",
+      "credit": "jankolkmeier (headless capture)",
+      "license": "LicenseRef-OT-UI-Documentation",
+      "source": "original",
+      "otUi": {
+        "page": "LFO SETUP",
+        "shows": "controls",
+        "firmware": "1.40C",
+        "moduleVersion": "0.1.0-experimental",
+        "imageSha256": "e878835234f164e6f33813b63ba31c55707a5b8fd675fc22619b605a00a0f70a",
+        "setup": "Headless ot_emu (upstream octabam 8250be0 port); MKII panel; stopped transport; 128x64 LCD, white palette (tools/emu/lcd_view.py)."
+      }
+    },
+    {
+      "path": "media/djc_lfo_setup.png",
+      "captureType": "emulator",
+      "caption": "LFO SETUP with WAVE = DJC",
+      "alt": "LFO setup page showing the DJC wave icon: a smooth curve",
+      "credit": "jankolkmeier (headless capture)",
+      "license": "LicenseRef-OT-UI-Documentation",
+      "source": "original",
+      "otUi": {
+        "page": "LFO SETUP",
+        "shows": "controls",
+        "firmware": "1.40C",
+        "moduleVersion": "0.1.0-experimental",
+        "imageSha256": "e878835234f164e6f33813b63ba31c55707a5b8fd675fc22619b605a00a0f70a",
+        "setup": "Headless ot_emu (upstream octabam 8250be0 port); MKII panel; stopped transport; 128x64 LCD, white palette (tools/emu/lcd_view.py)."
+      }
+    }
+  ],
+  "access": {
+    "location": "LFO SETUP ([FUNC]+[LFO]): WAVE = DJV, DJQ or DJC",
+    "steps": [
+      "Select a track, hold [FUNC] and press [LFO]",
+      "Turn B (WAVE) to DJV, DJQ or DJC, the last three waves",
+      "Set PMTR and DEP; SPD is DEJA, MULT the loop length, TRIG what moves through it"
+    ],
+    "screenshots": [
+      "media/dejavu_lfo_setup.png",
+      "media/djq_lfo_setup.png",
+      "media/djc_lfo_setup.png"
+    ]
+  }
+}

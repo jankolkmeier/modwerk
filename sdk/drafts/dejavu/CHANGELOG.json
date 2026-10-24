@@ -1,0 +1,9 @@
+[
+  {
+    "version": "0.1.0-experimental",
+    "date": "2026-10-24",
+    "changes": [
+      "First version: three audio-track LFO waveforms with a loop of remembered random values. DJV steps, DJQ plays root, fifth and octaves on PTCH (whole knob steps elsewhere), DJC glides. SPD (DEJA) sets how often a slot is replayed instead of renewed, MULT the loop length (1..64), TRIG what moves through it: FREE every step, HOLD one value per step played by trigs, ONE one slot per trig, TRIG and HALF restart on a trig. Emulator evidence only; hardware not tested."
+    ]
+  }
+]
