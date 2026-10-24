@@ -4,13 +4,13 @@ Evidence: host tests, ot_emu on own OS 1.40C, and first use on one Octatrack MKI
 
 ## Hardware (Octatrack MKII, OS 1.40C, flashed Modwerk beta base `cd39c494`)
 
-Packages loaded over USB with `npm run device -- try … --accept` (Windows, WinUSB bridge). Observed by the agent: every version below loaded, ran its trial and was accepted; the base reported the package's module identity as active and stayed in its normal state. The latest, `dejavu.mwrm` sha256 `1347aca9…` (source `51650ecc`), is active as set generation 9.
+Packages loaded over USB with `npm run device -- try … --accept` (Windows, WinUSB bridge). Observed by the agent: every version below loaded, ran its trial and was accepted; the base reported the package's module identity as active and stayed in its normal state. The latest, `dejavu.mwrm` sha256 `1347aca9…` (source `edceb9ab`, identical to the tested `51650ecc` on the developer's branch), is active as set generation 9.
 
 Reported by the developer while playing (not measured):
 
 | Check | Result (reported) |
 |---|---|
-| DJV, DJQ, DJC on the WAVE list; loop, DEJA, MULT and the TRIG modes | work as described (versions before `51650ecc`) |
+| DJV, DJQ, DJC on the WAVE list; loop, DEJA, MULT and the TRIG modes | work as described (versions before `edceb9ab`) |
 | SPD p-locked low on one trig | that step takes a new value every time, the rest of the loop stays |
 | DEP p-locked to 0 on one trig (with a PTCH lock) | that step plays the locked pitch, unaffected by the LFO |
 | DJQ, chromatic version (since replaced) | hard to tell from DJV by ear; measured why (25 cents on average) and replaced by root + fifth |

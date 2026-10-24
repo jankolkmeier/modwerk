@@ -67,7 +67,7 @@
     "report": "TESTING.md",
     "summary": "Host gate (verify.py) and 36 host tests; emulator: the five TRIG modes, DJQ root + fifth to 0.2 cents, DJC glides, trig kinds, ~0.15-0.17 % CPU with 24 LFOs. On one MKII over USB: loads and runs; behaviour reported by the developer, not yet measured.",
     "hardwareStatus": "reported",
-    "evidenceRevision": "51650eccba43ccd9b9a0c6fb8321f50dff9da5e3",
+    "evidenceRevision": "edceb9ab69bc0561227f2f24421a0cc7f94a1d70",
     "gates": [
       "Worst-case cycles under parameter modulation and maximum load",
       "Exact memory region and maximum-instance totals",
