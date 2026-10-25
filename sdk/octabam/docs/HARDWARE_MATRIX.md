@@ -123,11 +123,10 @@ No single-slot run has gone past 98.8 %.
    | feature | over the cable | needs the panel | hardware record |
    |---|---|---|---|
    | KITS | a pattern change by program change loads the pattern's Kit into the Part slot; the per-slot costs in LOAD METER fingerprint which effects a Kit put on which slot; audio and load around the change (`switch`) | LOAD KIT, SAVE KIT, the list copy / paste / clear / undo, assigning a Kit to a pattern | `modules/kits/README.md` "On the unit": not run unattended with the BCR2000 |
-   | MIDI SCENES | scene A / B select and the crossfader are CCs (55 / 56, 48), so the morph can be swept over USB MIDI with the locks stamped in `scenes.work` (MSC, 4,096 B); a MIDI track's output is the observable, if the unit sends it over USB (the USB README records no MIDI transmit measurement) | setting a lock (hold a scene, turn a knob), copy / paste a scene | the MIDISC 2.1 reimplementation has not run on hardware (the original ran on its author's unit, 14 Sep 2026) |
-   | DIRECT_JUMP_KYOTI | after the toggle ([PTN] + [YES], OFF at every power-on) a program change cues a jump at the next step; the stimuli (impulse and hit trains of known spacing) make the landing step and the phase checkable, and `switch` gives the load and gaps at the jump | the toggle | the author's MKI, 27-28 Sep and 1 Oct 2026; program change on fast re-cues, MIDI tracks and START SILENT only under the author's emulator |
+   | MIDI SCENES | scene A / B select and the crossfader are CCs (55 / 56, 48), so the morph can be swept over USB MIDI with the locks stamped in `scenes.work` (MSC, 4,096 B); a MIDI track's note-ons and the lock CC reach the host over USB (measured 25 Oct 2026), so the output is the observable; `ot_scenes.py stamp` writes the locks | setting a lock (hold a scene, turn a knob), copy / paste a scene | the MIDISC 2.1 reimplementation: stress, lag and load on Sam's MKII, 25 Oct 2026 ("MIDI SCENES on a unit" below); the original ran on its author's unit, 14 Sep 2026 |
+   | DIRECT_JUMP_KYOTI | after the toggle ([PTN] + [YES], OFF at every power-on) a program change cues a jump at the next step; the stimuli (impulse and hit trains of known spacing) make the landing step and the phase checkable, and `switch` gives the load and gaps at the jump | the toggle | the author's MKI, 27-28 Sep and 1 Oct 2026; program change on fast re-cues, MIDI tracks and START SILENT only under the author's emulator; landing step and position on Sam's MKII, 25 Oct 2026 ("DIRECT_JUMP_KYOTI on a unit" below) |
 
-   Not built. Open: what Sam has seen go wrong (symptoms, patterns, the project), which tracks and Kits are in play,
-   and whether the unit transmits MIDI track output over USB. Candidate runs: `switch` with the toggle on, many
+   Open: what Sam has seen go wrong (symptoms, patterns, the project), which tracks and Kits are in play. Candidate runs: `switch` with the toggle on, many
    program changes at random times and in bursts; a Kits project with a distinct effect set per Kit and a
    program-change walk over all of them; a scene sweep with a known morph.
 
@@ -145,7 +144,7 @@ STOP, a moving tempo, the crossfader, scene select, mutes, levels, FX knobs) aga
 with the health checks above every 0.5 s, and stops on the first failure with the operation index and the last 40
 operations; `run SEQ LABEL --until N` replays up to it. It is meant for the vague instability reports on KITS, MIDI
 SCENES and DIRECT_JUMP_KYOTI: a failure comes with a seed. It does not drive the panel, so a Kit, a scene lock or
-the direct-jump toggle has to be set up by hand. The generator is tested (`tools/verify/tests/test_fuzz.py`); no sequence has been run on a unit yet.
+the direct-jump toggle has to be set up by hand. The generator is tested (`tools/verify/tests/test_fuzz.py`).
 
 `ot_fuzz.py port REMIX PROJECT LABEL --seeds 1-8 --seconds 30` replays the program changes and CCs of the same
 sequences under the ColdFire port (`--sequencer --internal-clock --midi`, one load forked into one child per seed,
@@ -174,6 +173,105 @@ asked (`ot_kits.py migrate`, `--rotate 1` for the rotated assignment), and repla
 text and each seed's sequence and MIDI script and nothing derived from the OS. A red shard reproduces locally with the
 same seed. Written and its YAML parsed, its action pins checked against `ci.yml`'s and the upload action's against
 GitHub; not yet run: it needs the branch pushed, and nothing here has measured how fast the port runs on a runner.
+
+## MIDI SCENES on a unit
+
+25 Oct 2026, `octabam-inserts` tag J1 (the `octabam-core` set plus LOAD METER), Sam's MKII, one cable. Projects: a fresh
+project from `ot_fresh.py --remix octabam-inserts`, then `ot_scenes.py stamp` (banks 1-2: MIDI track 1 on channel 11,
+CC1..CC10 enabled, scene A = scene 1, scene B = scene 9, MIDI trigs on steps 4, 8, 12 and 16, CC 1 locks in
+`scenes.work`, `ot_matrix.py`'s run settings in `project.work`).
+
+- **MIDI track output over USB.** Measured with host clock at 120 BPM plus START: `9a 30 64` then `9a 30 00` every
+  0.500 s (note-on 0.125 s long), and `ba 01 vv` (channel 11, CC 1) when the crossfader moves. The unit sends no clock
+  and no active sensing on that port.
+- **Project settings.** A fresh project has `MIDI_CLOCK_RECEIVE=0` and `MIDI_TRANSPORT_RECEIVE=0`; with them the host
+  clock and START do not play the sequencer and no track notes are sent (SCJ1, 25 Oct 2026).
+- **Scene select range.** CC 55 / 56 clamp the value to 0..15 (`docs/firmware/MIDI.md`). Drawn over 0..127, 7 of 8
+  selections are scene 15. With locks in scenes 0 and 8 only, the `xf` profile sent no lock CC after 23.2 s (unit
+  and port alike): A and B were both scene 15. The `scenes` profile draws 0..15; `ot_scenes.py stamp --all-scenes`
+  locks all 16 scenes (scene s = 8 + 7 * s).
+- **Stress runs** (606 s each, one fresh load per project, no failure, LOAD METER bad records 0):
+
+  | seed, profile | operations | `ba 01` on the unit | `ba 01` under the port | note-ons (unit / port) |
+  |---|---|---|---|---|
+  | 2501, `xf` | 2,577 | 32 and 33 (two runs) | 106 | 1,209 / 1,212 |
+  | 2502, `scenes` | 2,311 | 503 | 1,083 | 1,210 / 1,212 |
+
+  Seed 2502 again with the fixed harness (unit and port from the same starting scene state, 606 s): the unit sent
+  1,075 lock CCs and the port 1,083, 1,211 and 1,212 note-ons; the longest common subsequence of the two CC value
+  streams is 1,074 values (of the unit's 1,075); the unit's first value is 36 where the port's stream starts with the
+  setup value 64. No failure, bad records 0, ColdFire longest run 239 us.
+  The unit counts in this table are from `ot_fuzz.py run` before 25 Oct 2026 (evening), which called the 0.4 s
+  `load_meter.healthy()` inline every 0.5 s: operations went out up to 0.4 s late, in bursts, and the sweeps were
+  thinned. They are not the unit's behaviour. With the check in its own thread, the first 25 s of seed 2501 gave 95
+  lock CCs on the unit, 93 from a plain sender with no health check, and 95 under the port, with the same values in
+  the same order. Controlled sweeps (a 0 to 127 crossfader sweep, scene A 0 and B 15, the sequencer stopped or
+  playing, with LOAD METER polling or audio capture) gave 104 CCs per direction at 200 and 50 ms per step and 102 to
+  104 at 20 ms; the port gave 105. The port's MIDI out carries no timestamps in the unstamped runs, so these
+  comparisons are by order and count.
+- **Crossfader to CC latency** (`ot_xflag.py`, scene A 0 locked at 8, scene B 15 locked at 113, crossfader
+  alternating 0 and 127, host monotonic clock):
+
+  | condition | steps | answered | median | p95 | max |
+  |---|---|---|---|---|---|
+  | stopped | 40 | 40 | 0.76 ms | 0.87 ms | 0.92 ms |
+  | playing | 40 | 40 | 0.74 ms | 0.99 ms | 1.21 ms |
+  | flood (200 CCs/s on tracks 2-8) | 40 | 38 | 0.66 ms | 1.52 ms | 1.63 ms |
+  | flood, 0.8 s gap | 150 | 150 | 0.70 ms | 1.47 ms | 2.9 ms |
+  | playing, 0.8 s gap | 150 | 150 | 0.66 ms | 0.83 ms | 0.97 ms |
+  | flood, 0.8 s gap | 150 | 150 | 0.69 ms | 1.41 ms | 2.03 ms |
+  | playing, 25 ms gap | 100 | 100 | 0.67 ms | 0.85 ms | 0.96 ms |
+
+  The value was 8 at crossfader 0 and 113 at 127 in every answered step. Steps 9 and 27 of the first flood run
+  (both to crossfader 0) got no CC; 300 further flood steps did not repeat it.
+- **ColdFire load** (LOAD METER, seed 2502 against a START / STOP-only sequence, 606 s each, 304 stored samples):
+
+  | | idle | seed 2502 |
+  |---|---|---|
+  | mean run per frame, median | 104.9 us | 104.8 us |
+  | share of a frame, median / max | 28.9 / 28.94 % | 28.9 / 29.01 % |
+  | longest run, median / p95 / max | 145 / 206 / 240 us | 145 / 205 / 237 us |
+
+  A frame is 362.8 us. These are the frame interrupt's figures; the mix runs in the main loop, which LOAD METER does
+  not cover. No image without MIDI SCENES was measured.
+- **Not done.** Setting a lock by hand, copy / paste scene, scene locks inside Kits, a per-event comparison of the
+  unit's CC values with the port's.
+
+## DIRECT_JUMP_KYOTI on a unit
+
+25 Oct 2026, `octabam-inserts` tag J1, Sam's MKII, one cable, `ot_djump.py`. Project: a fresh project stamped with
+`ot_scenes.py stamp --banks 1-2 --pattern-steps 2=1,2,4,7,8,11,13` (MIDI track 1 on channel 11; pattern 1 notes on
+steps 4, 8, 12, 16, pattern 2 on steps 1, 2, 4, 7, 8, 11, 13; both 16 steps). The host sends START with a clock at
+120 BPM (125 ms a step) and a program change to pattern 2 at a different point in the pattern each trial; the
+note-ons are put on a step grid and fitted against the landing step and two positions pattern 2 may play from
+(`since-start`: step mod 16, the module's claim; `restart`: from the landing step).
+
+| toggle ([PTN] + [YES]) | trials | landing | position |
+|---|---|---|---|
+| off (power-up state) | 7 | step 16 or 32, the pattern end | coincide at a multiple of 16 |
+| on | 12 | the first step after the program change arrived, in every trial | `since-start` in 11; the 12th (landing 16) cannot tell the two apart |
+
+- The landing is a range where the steps between the program change and the first differing note play the same in
+  both patterns (ranges up to 5 steps wide); every range contains the first step boundary after the program change.
+  Tightest: a program change at step 16.33 landed on step 17, one at 15.83 on step 16.
+- The notes before the program change fell on steps 4, 8, 12, 16 in every trial (the trig encoding of
+  `ot_project.set_pattern_trig`).
+- LOAD METER bad records 0 after both runs.
+- **Program-change bursts with the toggle on** (`ot_fuzz.py` profile `pc`, seed 2601, 8 layouts of banks 1-2, 582
+  program changes in 603 s, no failure, bad records 0). Against the model (each program change takes over on the
+  first step after it arrives, the last in a step wins, position kept since START; the unit started on pattern 2,
+  left there by the previous probe), 56 of 4,144 steps differ (20 notes missing, 36 extra): 47 within 2 steps of a
+  landing, 9 at a program change that arrived within 0.03 s of a step boundary. No multi-step disorder. Note times
+  within -0.06 to +0.18 steps of the 125 ms grid. ColdFire: mean 104.9 us (median), longest run 145 us median, 204
+  p95, 253 max; share 28.9 % median, 29.4 % max.
+- **Observed, not measured** (Sam, 25 Oct 2026, during that run): the trig indicator lagged and jumped on some
+  program changes in the burst, not continuously. The MIDI track 1 notes show no corresponding stall or shift. Which
+  display element it is has not been established: the playhead is shown by the trig keys' running light
+  (`docs/site/usage/trackpatterns.md`), and whether the LCD has an indicator is unchecked. The display was not
+  captured; the toggle-off run with the same sequence has not been done.
+- Not done: Kits in play, MIDI tracks other than 1, tempo changes, scale and length differences between the
+  patterns, `switch` load and gaps at the jump, the toggle-off run of seed 2601, the trig key LED rows under the
+  port's panel link.
 
 ## Flags
 

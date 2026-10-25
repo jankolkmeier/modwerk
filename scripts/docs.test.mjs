@@ -23,6 +23,15 @@ afterEach(() => { for (const root of folders.splice(0)) rmSync(root, { recursive
 const text = bytes => 'x'.repeat(bytes)
 
 describe('documents', () => {
+  it('keeps the commands in AGENTS.md and both skill folders one to one', () => {
+    const skill = (name, text = '---\nname: ' + name + '\n---\n') => ({ ['.claude/skills/' + name + '/SKILL.md']: text, ['.agents/skills/' + name + '/SKILL.md']: text })
+    const root = repository({ 'AGENTS.md': '## Commands\n\nStart with `/modwerk-a <link>`.\n', ...skill('modwerk-a') })
+    expect(checkDocs(root)).toEqual({ documents: 1 })
+    write(root, skill('modwerk-b'))
+    expect(() => checkDocs(root)).toThrow('.claude/skills/modwerk-b is not listed under Commands in AGENTS.md.')
+    write(root, { 'AGENTS.md': '`/modwerk-a`, `/modwerk-b`, `/modwerk-c`\n', '.claude/skills/modwerk-b/SKILL.md': 'name: modwerk-b\nchanged\n' })
+    expect(() => checkDocs(root)).toThrow(/agents\/skills\/modwerk-b\/SKILL.md must be a copy[^]*lists \/modwerk-c, but/)
+  })
   it('lets a document grow to the limit, and one already over it shrink but not grow', () => {
     const root = repository({ 'docs/SHORT.md': text(100), 'docs/LONG.md': text(LIMIT + 500), 'AGENTS.md': text(100) })
     write(root, { 'docs/SHORT.md': text(LIMIT), 'docs/LONG.md': text(LIMIT + 400) })

@@ -45,6 +45,17 @@ export function checkDocs(root, base = null) {
     })
     if (grown.length) problems.push(`${grown.join('; ')}, over the ${kb(LIMIT)} a document may have. Make room by cutting what is stale or said elsewhere (Git keeps the history), or move a part into its own document and list it in docs/README.md.`)
   }
+  // AGENTS.md's commands and the skills name each other one to one; Codex's .agents/skills is Claude Code's .claude/skills byte for byte.
+  const listed = existsSync(join(root, 'AGENTS.md')) ? [...new Set([...readFileSync(join(root, 'AGENTS.md'), 'utf8').matchAll(/`\/(modwerk-[a-z0-9-]+)[^`]*`/g)].map(match => match[1]))] : []
+  const skills = existsSync(join(root, '.claude/skills')) ? readdirSync(join(root, '.claude/skills')) : []
+  for (const name of skills) {
+    const file = join(root, '.claude/skills', name, 'SKILL.md'), twin = join(root, '.agents/skills', name, 'SKILL.md')
+    if (!listed.includes(name)) problems.push(`.claude/skills/${name} is not listed under Commands in AGENTS.md.`)
+    else if (!existsSync(file) || !new RegExp('^name: ' + name + '$', 'm').test(readFileSync(file, 'utf8'))) problems.push(`.claude/skills/${name}/SKILL.md must exist and say name: ${name}.`)
+    else if (!existsSync(twin) || readFileSync(twin, 'utf8') !== readFileSync(file, 'utf8')) problems.push(`.agents/skills/${name}/SKILL.md must be a copy of .claude/skills/${name}/SKILL.md (Codex reads it).`)
+  }
+  for (const name of listed) if (!skills.includes(name)) problems.push(`AGENTS.md lists /${name}, but .claude/skills/${name}/SKILL.md is missing.`)
+  for (const name of existsSync(join(root, '.agents/skills')) ? readdirSync(join(root, '.agents/skills')) : []) if (!skills.includes(name)) problems.push(`.agents/skills/${name} has no .claude/skills/${name}.`)
   if (problems.length) throw new Error(problems.join('\n'))
   return { documents: documents.length }
 }

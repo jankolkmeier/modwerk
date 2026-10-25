@@ -105,4 +105,27 @@ describe('diagnostics pull', () => {
     expect(lines.filter(l => l.includes('stall'))).toEqual([
       '  unit: #3 start 2 +0m0s stall reason 1 (an OS upgrade: this start runs another base; not a hang)', '  unit: #5 start 3 +0m0s stall reason 1'])
   })
+  it('keeps an earlier log apart from the one a new base restarts at start 1', () => {
+    const at = (seq, boot, kind, a = 0, more = {}) => ({ seq, boot, second: 60 * seq, kind, a, cpu: 0, dsp1to4: 0, dsp5to8: 0, machines: Array(24).fill(0),
+      fx: Array(16).fill(0), keys: Array(16).fill(255), screen: 0, tempo24: 2880, playing: false, ...more })
+    const log = (n, base, incidents) => entry(n, 'tester', { event: 'device_log', phase: 'ready', base, log: { loads: [], incidents } })
+    const old = 'a'.repeat(64), next = 'b'.repeat(64)
+    const events = [log(1, old, [at(1, 1, 'start'), at(2, 2, 'start'), at(3, 3, 'start')]), log(2, old, [at(4, 3, 'hot', 2, { cpu: 920 })]),
+      log(3, old, [at(4, 3, 'hot', 2, { cpu: 920 }), at(5, 4, 'start')]), // sent again by another browser: the same log
+      log(4, next, [at(1, 1, 'start'), at(2, 1, 'base', 0xbbbbbbbb), at(3, 1, 'set')]), log(5, next, [at(4, 2, 'start'), at(5, 2, 'base', 0xbbbbbbbb)])]
+    const text = summary({ events, counts: [] })
+    expect(text).toContain("  restarts 3 (the unit's earlier log, from base aaaaaaaa, starts 1-4)\n  restarts 1 (the unit's log, from base bbbbbbbb, starts 1-2)")
+    expect(text).toContain('  unit: #4 start 3 +4m0s hot (2 half-seconds at 90 %+), cpu 92.0%')
+    expect(text).toContain('machines ' + Array(24).fill(0).join(' ') + ' (an earlier log, base aaaaaaaa)\n  unit: #2 start 1 +2m0s base bbbbbbbb\n')
+  })
+  it('calls a stall after a stopped PROJ … RIGHT YES walk at 95 %+ with nothing installed likely an OS upgrade or USB disk mode', () => {
+    const at = (seq, boot, kind, a = 0, more = {}) => ({ seq, boot, second: 0, kind, a, cpu: 0, dsp1to4: 0, dsp5to8: 0, machines: Array(24).fill(0),
+      fx: Array(16).fill(0), keys: Array(16).fill(255), screen: 0, tempo24: 0, playing: false, ...more })
+    const walk = [...Array(12).fill(255), 0x1c, 0x20, 0x21, 0x31]
+    const run = (set, hot) => unitLines([at(1, 1, 'start'), at(2, 1, 'base', 0xcd39c494), at(3, 1, 'set', set), at(4, 1, 'hot', 2, { cpu: 1000, keys: walk, ...hot }),
+      at(5, 2, 'start'), at(6, 2, 'base', 0xcd39c494), at(7, 2, 'stall', 1)]).at(-1)
+    expect(run(0)).toBe('  unit: #7 start 2 +0m0s stall reason 1 (likely an OS upgrade or USB disk mode, beta finding 72: the session before ended stopped at 95 %+ CPU after PROJ … RIGHT YES, no module installed)')
+    expect(run(0, { keys: [...Array(14).fill(0x20), 0x21, 0x31] })).toContain('likely') // PROJ has left the 16 keys the unit keeps
+    for (const [set, hot] of [[1], [0, { playing: true }], [0, { cpu: 940 }], [0, { keys: [...Array(14).fill(255), 0x21, 0x31] }]]) expect(run(set, hot)).toBe('  unit: #7 start 2 +0m0s stall reason 1')
+  })
 })

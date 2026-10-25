@@ -2,6 +2,10 @@
 
 Modwerk builds custom firmware modules for Elektron instruments and the other machines in `sdk/machines/`. This repository holds the module SDKs (`sdk/`), a React and Vite site (`src/`) and a Cloudflare Worker API (`server/`, `worker.ts`). This file holds the rules for every task. The guides it points to hold the detail, and a lesson learned goes into them, never only into a session.
 
+## Commands
+
+Committed skills that load on clone: Claude Code reads `.claude/skills/`, Codex the identical `.agents/skills/`, and any other agent follows `<name>/SKILL.md` when asked. Open a developer's first session with `/modwerk-start` (overview and setup). Then `/modwerk-new-module`, `/modwerk-update-module`, `/modwerk-fix-issue <link>`, `/modwerk-try-on-unit`, `/modwerk-pr-ready`, `/modwerk-review-prs`, and the owner's `/modwerk-maintain` ([docs/MAINTENANCE.md](docs/MAINTENANCE.md)).
+
 ## Setup and checks
 
 - Use Node 24 (`.nvmrc`), then `npm ci`.
