@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Elastic-2.0
+// Copyright (c) 2026 Jannik Aßfalg (repeat98)
 // Pulls the private Octatrack diagnostics members chose to share, for the owner and the owner's agents.
 // It uses a read-only key that opens only GET /api/admin/octatrack/diagnostics; the Worker holds its SHA-256.
 // Not part of npm run check. See docs/APP_DEVELOPMENT.md#private-diagnostics.

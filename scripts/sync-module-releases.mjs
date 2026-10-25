@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Elastic-2.0
+// Copyright (c) 2026 Jannik Aßfalg (repeat98)
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'

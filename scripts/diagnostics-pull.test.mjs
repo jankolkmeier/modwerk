@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Elastic-2.0
+// Copyright (c) 2026 Jannik Aßfalg (repeat98)
 import { describe, expect, it } from 'vitest'
 import { members, pullAll, reportsByMember, summary, unitLines, when } from './diagnostics-pull.mjs'
 
