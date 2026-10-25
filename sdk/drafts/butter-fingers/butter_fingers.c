@@ -1,12 +1,12 @@
 /* SPDX-License-Identifier: MIT
  * Copyright (C) 2026 Jan Kolkmeier
  *
- * BUTTER FINGERS: clearing a lock by pressing a DATA ENTRY knob no longer
+ * BUTTER FINGERS: removing a lock by pressing a DATA ENTRY knob no longer
  * writes a new one when the knob slips a detent. On the MKII the press is a
  * lock toggle applied on release, and a turn while pressed is stock's coarse
  * edit (x7) that cancels the toggle. While a TRIG key (a parameter lock) or
  * SCENE A/B (a scene lock) is held, a pressed knob's first single detent is
- * dropped (the slip that would turn a clear into a x7 jump); further turns pass,
+ * dropped (the slip that would turn the removal into a x7 jump); further turns pass,
  * so a deliberate coarse edit works, one detent short. Every turn of that knob
  * is dropped for QUIET ticks after its release (the detent the release turns).
  * Everything else reaches the firmware as before: the press itself, the other

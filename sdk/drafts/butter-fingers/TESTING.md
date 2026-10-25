@@ -27,7 +27,7 @@ Setup:
 | Step | Stock | Butter Fingers |
 |---|---|---|
 | hold trig 1, turn B +5 | lock 5 | lock 5 |
-| press B, 1 detent, release, +1 after 50 ms | 5 → 13 (×7 jump, no clear) | cleared |
+| press B, 1 detent, release, +1 after 50 ms | 5 → 13 (×7 jump, not removed) | removed |
 | press B, 3 single detents | +21 (3 × 7) | +14 (first dropped, 2 × 7) |
 | +1 after 400 ms | lock +1 | lock +1 |
 | no trig held: turn B +1 | Part value, no lock | the same |
@@ -38,7 +38,7 @@ The press is a lock toggle applied on release: pressing an unlocked value writes
 ## Hardware (reported, not verified)
 
 Tester Jan Kolkmeier, 25 October 2026: Octatrack MKII, OS 1.40C, flashed beta base `cd39c494`, over USB, beside Ringmod SC 0.2.0, Deja Vu, Preview Vol 0.1.2 and FM Synth.
-- **Clearing p-locks** with a knob press now stays cleared.
+- **Removing p-locks** with a knob press: they now stay removed.
 - **The 150 ms window** still feels immediate.
 - **Coarse press + turn** feels good, one detent late.
 - **Scene locks and trig locks** work as described; project-name editing is unaffected.

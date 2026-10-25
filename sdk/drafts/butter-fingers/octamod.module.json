@@ -7,16 +7,17 @@
   "category": "system",
   "author": {
     "github": "jankolkmeier",
+    "name": "Jan Kolkmeier",
     "credits": [
       "Jan Kolkmeier: the module, its tests and documentation, and the thumbnail."
     ]
   },
   "nativeManifest": "manifest.py",
   "presentation": {
-    "label": "No stray locks after clearing one",
+    "label": "No stray locks after removing one",
     "family": "Editing",
-    "summary": "Clearing a parameter or scene lock with a knob press no longer writes a new lock when the knob slips a detent.",
-    "overview": "On the MKII, pressing a DATA ENTRY knob while holding a trig (or SCENE A/B) clears that lock when you let go. A finger that nudges the knob while pressed turns the clear into a coarse x7 jump, and one that nudges it on release writes a new lock. Butter Fingers ignores the first slipped detent while the knob is pressed and every detent for 150 ms after its release, only while a lock is being edited. Deliberate coarse edits still work, one detent later.",
+    "summary": "Removing a parameter or scene lock with a knob press no longer writes a new lock when the knob slips a detent.",
+    "overview": "On the MKII, pressing a DATA ENTRY knob while holding a trig (or SCENE A/B) removes that lock when you let go. A finger that nudges the knob while pressed turns the removal into a coarse x7 jump, and one that nudges it on release writes a new lock. Butter Fingers ignores the first slipped detent while the knob is pressed and every detent for 150 ms after its release, only while a lock is being edited. Deliberate coarse edits still work, one detent later.",
     "highlights": [
       "Only while a TRIG key or SCENE A/B is held, and only for the pressed knob: everything else behaves as stock.",
       "The release window is 150 ms; a deliberate turn right after it is not delayed.",
@@ -24,19 +25,19 @@
       "No setting, no stock code patched, nothing stored in the project."
     ],
     "usage": [
-      "Hold a TRIG key with a parameter lock and press the DATA ENTRY knob of the locked parameter; let go. The lock is cleared, as in stock.",
-      "Let go of the knob carelessly, nudging it a detent as you lift your finger: with Butter Fingers the lock stays cleared instead of a new lock being written.",
+      "Hold a TRIG key with a parameter lock and press the DATA ENTRY knob of the locked parameter; let go. The lock is removed, as in stock.",
+      "Let go of the knob carelessly, nudging it a detent as you lift your finger: with Butter Fingers the lock stays removed instead of a new lock being written.",
       "For a deliberate coarse edit, keep the knob pressed and turn it: the first detent is ignored, from the second on it moves in stock's coarse steps (x7).",
-      "Scene locks work the same way: hold SCENE A or B and press the knob to clear that scene's lock."
+      "Scene locks work the same way: hold SCENE A or B and press the knob to remove that scene's lock."
     ]
   },
   "access": {
     "location": "Every page with DATA ENTRY knobs, while a TRIG key or SCENE A/B is held",
     "steps": [
-      "Hold a TRIG key with a parameter lock and press the DATA ENTRY knob of the locked parameter; let go. The lock is cleared, as in stock.",
-      "Let go of the knob carelessly, nudging it a detent as you lift your finger: with Butter Fingers the lock stays cleared instead of a new lock being written.",
+      "Hold a TRIG key with a parameter lock and press the DATA ENTRY knob of the locked parameter; let go. The lock is removed, as in stock.",
+      "Let go of the knob carelessly, nudging it a detent as you lift your finger: with Butter Fingers the lock stays removed instead of a new lock being written.",
       "For a deliberate coarse edit, keep the knob pressed and turn it: the first detent is ignored, from the second on it moves in stock's coarse steps (x7).",
-      "Scene locks work the same way: hold SCENE A or B and press the knob to clear that scene's lock."
+      "Scene locks work the same way: hold SCENE A or B and press the knob to remove that scene's lock."
     ],
     "screenshots": []
   },
@@ -63,7 +64,7 @@
     "limitations": [
       "OS 1.40C, MKII (the MKI has no knob presses). Reported on one MKII only.",
       "Changes a stock gesture while a lock is edited: the first detent of press + turn and every detent for 150 ms after the knob's release are ignored. Remove the module to restore stock behaviour.",
-      "A detent turned just before the press registers reaches the firmware; the press's clear removes the lock it wrote.",
+      "A detent turned just before the press registers reaches the firmware; the press then removes the lock it wrote.",
       "LEVEL and press + turn outside lock editing are untouched."
     ]
   },
@@ -111,7 +112,7 @@
   },
   "tests": {
     "report": "TESTING.md",
-    "summary": "Host gate (verify.py, 20 checks) and an ot_emu lock-clear comparison against stock on the beta base cd39c494 over emulated USB; reported working on one MKII over USB. No owner-verified hardware qualification yet.",
+    "summary": "Host gate (verify.py, 20 checks) and an ot_emu lock-removal comparison against stock on the beta base cd39c494 over emulated USB; reported working on one MKII over USB. No owner-verified hardware qualification yet.",
     "hardwareStatus": "reported",
     "evidenceRevision": "0000000000000000000000000000000000000000",
     "gates": [

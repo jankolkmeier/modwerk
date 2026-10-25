@@ -1,4 +1,4 @@
-"""BUTTER FINGERS -- clearing a lock by pressing a DATA ENTRY knob no longer
+"""BUTTER FINGERS -- removing a lock by pressing a DATA ENTRY knob no longer
 writes a new one when the knob slips a detent.
 
 While a TRIG key (a parameter lock) or SCENE A/B (a scene lock) is held, a
@@ -26,8 +26,8 @@ MODULE = Module(
     author="jankolkmeier",
     author_url="https://github.com/jankolkmeier",
     proof=Proof.UNTESTED,
-    proof_note="Host gate and ot_emu lock-clear comparison against stock; reported working on one MKII over USB.",
-    doc="No stray locks after clearing one with a knob press: a slipped detent while pressed or on release is dropped.",
+    proof_note="Host gate and ot_emu lock-removal comparison against stock; reported working on one MKII over USB.",
+    doc="No stray locks after removing one with a knob press: a slipped detent while pressed or on release is dropped.",
     linked=(
         Linked("butterfingers", os.path.join(_HERE, "butter_fingers_core.s")),
     ),
