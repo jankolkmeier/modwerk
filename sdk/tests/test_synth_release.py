@@ -54,7 +54,7 @@ class SynthRelease(unittest.TestCase):
         doc = json.loads((FOLDER/'octamod.module.json').read_text())
         self.assertEqual(doc['version'], RECORD['version'])
         self.assertNotIn('build', doc)
-        self.assertIn(doc['tests']['hardwareStatus'], ('untested', 'reported'))
+        self.assertEqual(doc['tests']['hardwareStatus'], 'reported')
         self.assertNotIn('qualification', doc['tests'])
         self.assertTrue((APP/'sdk/octabam/modules/synth').exists())
         for name in ['sdk/catalog.json','src/catalog/module-documents.json']:
@@ -65,16 +65,14 @@ class SynthRelease(unittest.TestCase):
         self.assertEqual(approval['version'], doc['version'])
         self.assertEqual(set(approval['waived']), {'current-build-hardware', 'chip-worst-case-cycles', 'complete-memory-bounds'})
         self.assertIsNone(doc['resources']['processing']['value'])
-        report = json.loads((FOLDER/'evidence/regressions.json').read_text())
+        report = json.loads((FOLDER/'evidence/lfo-regressions.json').read_text())
         self.assertEqual(report['moduleVersion'], doc['version'])
-        for regression in report['releaseRegressions'].values():
-            self.assertEqual(regression['status'], 'passed')
-            self.assertEqual(regression['imageSha256'], report['patchedBrowser']['mainSha256'])
-            self.assertRegex(regression['emulatorSha256'], r'^[a-f0-9]{64}$')
-        for file, fingerprint in report['compiledCode'].items():
-            self.assertEqual(sha(FOLDER/file), fingerprint)
-        self.assertEqual(report['audio']['mono']['patched']['finalHalfSecondPeak'], 0)
-        self.assertLessEqual(report['audio']['fourVoices']['patched']['finalHalfSecondPeak'], 2)
+        self.assertEqual(sha(FOLDER/'upstream/synth/poly.s'), report['polySha256'])
+        published = {p['id']: p for p in json.loads((APP/'src/engine/assets/octatrack-module-packages.json').read_text())['packages']}['synth']
+        self.assertEqual(published['sha256'], report['package']['sha256'])
+        self.assertEqual(published['version'], doc['version'])
+        self.assertEqual(report['hardware']['status'], 'reported')
+        self.assertIn('chip worst-case cycles', report['unmeasured'])
         capture = json.loads((FOLDER/'media/capture.json').read_text())
         image = capture['imageSha256']
         screenshots = [media for media in doc['media'] if 'otUi' in media]
@@ -82,7 +80,7 @@ class SynthRelease(unittest.TestCase):
         for media in screenshots:
             self.assertEqual(media['otUi']['imageSha256'], image)
             self.assertEqual(sha(FOLDER/media['path']), capture['screenshots'][Path(media['path']).name])
-        self.assertEqual(image, report['patchedNativeMainSha256'])
+        self.assertEqual(image, report['captureMain']['sha256'])
         self.assertEqual(capture['moduleVersion'], doc['version'])
         self.assertEqual(capture['sourceSha256'], approval['sourceSha256'])
         composition = json.loads((APP/'sdk/native-comparisons/synth.json').read_text())

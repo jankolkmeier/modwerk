@@ -19,6 +19,14 @@ All changes are in `upstream/synth/poly.s`. They add no new hook sites, pokes or
 
 Built with `sdk/runtime/loader/build.py --octabam-machine synth --stock <OS 1.40C>`: 26,660 bytes, module `e8c3e4fa`, package SHA-256 in `evidence/lfo-regressions.json`. The strict stock-free scan passes. The machine recipe was recaptured for the new image (`--capture-stock-recipe`; 38 copies, addresses, lengths and hashes only), and the `poly.s` hash in `machine-ports.json` is updated. Before the change, the published 0.1.2 package rebuilt byte for byte from main.
 
+## Release builds (25 October 2026)
+
+- **Compiled packages:** `scripts/build-modules-isolated.sh` at `34206f47` in the pinned toolchain image (`modwerk-source-tools`, `sha256:355a9a97…`), imported with `npm run modules:import -- … --development`. Only FM Synth's objects change; every other package keeps its bytes (source-commit stamps and the version row aside).
+- **USB package:** `public/octatrack-modules/synth/0.1.3-experimental.mwrm`, SHA-256 `ff99f9c2…`, 30,310 bytes. It is built by the publishing tool's own `build` for this one entry: a full `npm run octatrack:module-packages` run stops locally at another module's recipe (the newer Elekloader kit, as noted in #876). It's the exact build tested on the MKII.
+- **Native comparison:** `npm run module:verify -- synth --os <1.40C>`. Of 154 selections, 54 native module-owned images match, 100 refusals match, 0 mismatches (`sdk/native-comparisons/synth.json`, source `e5c05ab5…`).
+- **LCD captures:** the seven screens, recaptured from an FM Synth 0.1.3 MAIN (`2858dce9…`, browser composer on the compiled packages) with the same panel plan as 0.1.2, using `scripts/capture-module-ui.py` and upstream `ot_emu`. They are pixel- and byte-identical to 0.1.2's (the UI is unchanged); provenance is in `media/capture.json` and each `media[].otUi`.
+- **0.1.2's regressions** (MIDI selector, headroom) moved to `evidence/release-0.1.2/regressions.json` with its report. They cover code this release doesn't change and were not re-run.
+
 ## Emulator measurements
 
 Setup:

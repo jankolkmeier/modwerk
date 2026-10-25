@@ -5,10 +5,11 @@
  "polySha256": "609364afdcafa485ade18586299636ad5ffb3596bbc34ba4c7251520f9bf4225",
  "package": {
   "sha256": "ff99f9c262f88950dcf373f72de6da1ef91264476406c016cafcde5f234ba8cc",
-  "bytes": 26660,
   "moduleId": "e8c3e4fa",
   "strictStockFreeScan": "passed",
-  "recipeCopies": 38
+  "recipeCopies": 38,
+  "codeAndDataBytes": 26660,
+  "fileBytes": 30310
  },
  "emulator": {
   "tool": "adapted ot_emu (scripts/octatrack-emulator/build.py) on the flashed beta base cd39c494, packages installed over emulated USB",
@@ -96,5 +97,12 @@
   "maximum simultaneous FM tracks",
   "MIDI note input with these changes",
   "MKI"
- ]
+ ],
+ "captureMain": {
+  "sha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
+  "builder": "browser composer, tools/ot-build-local.mjs, packages compiled at 34206f47",
+  "modules": [
+   "synth"
+  ]
+ }
 }

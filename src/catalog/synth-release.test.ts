@@ -9,7 +9,7 @@ import template from '../../sdk/octabam/modules/synth/qualification.example.json
 import capture from '../../sdk/octabam/modules/synth/media/capture.json'
 import baseline from '../../sdk/module-qualification-baseline.json'
 import approval from '../../sdk/synth-build-approval.json'
-import regressions from '../../sdk/octabam/modules/synth/evidence/regressions.json'
+import regressions from '../../sdk/octabam/modules/synth/evidence/lfo-regressions.json'
 import { parseModuleDocument, requireModuleUiForPublication, requireModuleQualificationForPublication } from './module-contract'
 import { moduleNativeSourceSha256, parseQualificationBaseline, requireFolderQualification } from '../../scripts/module-qualification.mjs'
 import { requireCompleteReadme, requireMonochromePng } from '../../scripts/module-documentation.mjs'
@@ -20,7 +20,7 @@ const folder = resolve('sdk/octabam/modules/synth')
 describe('FM Synth exact experimental release', () => {
   it('publishes only the exact owner-approved experimental release and keeps unknown measurements visible', async () => {
     const document = parseModuleDocument(source)
-    expect(document.tests.hardwareStatus).toBe('untested')
+    expect(document.tests.hardwareStatus).toBe('reported')
     expect(document.resources.processing.value).toBeNull()
     expect(() => requireModuleUiForPublication(document)).not.toThrow()
     expect(() => requireModuleQualificationForPublication(document)).toThrow('worst-case cycles, exact memory and hardware')
@@ -28,14 +28,12 @@ describe('FM Synth exact experimental release', () => {
     expect(approval.version).toBe(document.version)
     expect(approval.sourceSha256).toBe(await moduleNativeSourceSha256(folder, document))
     expect(regressions.moduleVersion).toBe(document.version)
-    for (const regression of Object.values(regressions.releaseRegressions)) {
-      expect(regression.status).toBe('passed')
-      expect(regression.imageSha256).toBe(regressions.patchedBrowser.mainSha256)
-    }
+    expect(regressions.hardware.status).toBe('reported')
+    expect(capture.imageSha256).toBe(regressions.captureMain.sha256)
     expect(resolveSelection([document.id]).map(module => module.id)).toEqual(['synth'])
     expect(MODULES.some(module => module.id === document.id)).toBe(true)
     for (const mutate of [
-      (d: typeof document) => { d.version = '0.1.3-experimental' },
+      (d: typeof document) => { d.version = '0.1.4-experimental' },
       (d: typeof document) => { d.tests.hardwareStatus = 'verified' },
     ]) {
       const changed = structuredClone(document); mutate(changed)
@@ -47,11 +45,11 @@ describe('FM Synth exact experimental release', () => {
     const copy = mkdtempSync(resolve(tmpdir(), 'modwerk-synth-release-test.'))
     try {
       cpSync(folder, copy, { recursive: true })
-      const path = resolve(copy, 'evidence/regressions.json'), report = JSON.parse(readFileSync(path, 'utf8'))
-      report.releaseRegressions.midi.status = 'failed'
+      const path = resolve(copy, 'evidence/lfo-regressions.json'), report = JSON.parse(readFileSync(path, 'utf8'))
+      report.hardware.status = 'verified'
       writeFileSync(path, JSON.stringify(report))
       await expect(requireFolderQualification(copy, parseModuleDocument(source), parseQualificationBaseline(baseline))).rejects.toThrow('exact native source')
-      cpSync(resolve(folder, 'evidence/regressions.json'), path)
+      cpSync(resolve(folder, 'evidence/lfo-regressions.json'), path)
       writeFileSync(resolve(copy, 'manifest.py'), 'raise AssertionError("changed submitted source must never execute")')
       await expect(requireFolderQualification(copy, parseModuleDocument(source), parseQualificationBaseline(baseline))).rejects.toThrow('exact native source')
     } finally { rmSync(copy, { recursive: true, force: true }) }

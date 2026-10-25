@@ -299,8 +299,8 @@
         "page": "SRC SETUP",
         "shows": "location",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -316,8 +316,8 @@
         "page": "FM SYNTH SRC",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -333,8 +333,8 @@
         "page": "FM SYNTH LFO",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -350,8 +350,8 @@
         "page": "AMP SETUP",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -367,8 +367,8 @@
         "page": "CONTROL SEQUENCER: SCALE",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -384,8 +384,8 @@
         "page": "CONTROL SEQUENCER: ROOT",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
@@ -401,8 +401,8 @@
         "page": "CONTROL SEQUENCER: GLIDE",
         "shows": "controls",
         "firmware": "1.40C",
-        "moduleVersion": "0.1.2-experimental",
-        "imageSha256": "d5464195fac0033852546fbbc8f809b64d16646309c21ab25e2f203fbf123157",
+        "moduleVersion": "0.1.3-experimental",
+        "imageSha256": "2858dce965468dc9242e442cc009855bdc6666635aacf1494a3c2a312014d766",
         "setup": "Headless ot_emu; MKII panel; empty 32 MiB disposable card; stopped transport; actual 128×64 LCD pixels at integer scale 6."
       }
     },
