@@ -89,5 +89,6 @@ Open a pull request with source, documentation, test results, attribution and li
 | Metadata and version rules | [Module contract](docs/MODULE_REPOSITORIES.md) |
 | Testing and evidence | [Native testing](sdk/octabam/docs/remixer/TESTING.md) · [Verification status](docs/VERIFICATION.md) |
 | Web app and deployment | [App development](docs/APP_DEVELOPMENT.md) · [Architecture decisions](docs/DECISIONS.md) |
+| Every other document | [Documentation index](docs/README.md) |
 
 Built on [octabam](https://github.com/sambanks/octabam), with its [MIT licence](sdk/octabam/LICENSE), [component credits](sdk/octabam/THIRD_PARTY.md) and [pinned provenance](sdk/UPSTREAM.json) retained. Firmware-dependent work uses your own original OS 1.40C locally; never commit or upload firmware, extracted routines/tables or generated firmware images.

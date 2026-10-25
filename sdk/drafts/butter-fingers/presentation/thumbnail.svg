@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="576" viewBox="0 0 320 192" class="signal-art" fill="none" role="img" aria-labelledby="title description">
+<title id="title">Butter Fingers — a slipped knob no longer writes a lock</title>
+<desc id="description">Original line drawing: two fingers grip and press a DATA ENTRY knob shown in slight perspective; small shake marks at its base stand for the detent that slips as it is let go, which the module ignores. An illustration, not an Octatrack screenshot.</desc>
+<style>.signal-art{ width: 100%; height: calc(100% - 46px); overflow: visible; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.signal-grid{ stroke: #ffffff; opacity: .035; stroke-width: .7; }
+.signal-main{ stroke: #7ec8e3; stroke-width: 2.3; }
+.signal-secondary{ stroke: #7ec8e3; opacity: .45; stroke-width: 1.7; }
+.signal-ghost{ stroke: #7ec8e3; opacity: .2; stroke-width: 1.3; }
+.signal-dot, .rhythm-on{ fill: #7ec8e3; }
+.signal-art text{ fill: #7ec8e3; opacity: .52; font: 8px monospace; letter-spacing: .7px; stroke: none; }
+</style>
+<rect width="320" height="192" fill="#232328"/>
+<path class="signal-grid" d="M0 52H320M0 97H320M0 142H320M64 0V192M128 0V192M192 0V192M256 0V192"/>
+<!-- the panel the knob sits in -->
+<ellipse class="signal-ghost" cx="160" cy="150" rx="78" ry="17"/>
+<ellipse class="signal-ghost" cx="160" cy="150" rx="56" ry="12"/>
+<!-- the knob: a short cylinder seen from slightly above -->
+<path class="signal-secondary" d="M124 116V142A36 9 0 0 0 196 142V116"/>
+<path class="signal-ghost" d="M133 120V145M145 122V148M160 123V149M175 122V148M187 120V145"/>
+<ellipse class="signal-main" cx="160" cy="116" rx="36" ry="9"/>
+<!-- its indicator line on the cap -->
+<path class="signal-main" d="M168 121L186 123"/>
+<!-- index finger, from above right, its tip pressing the cap (the fill hides the cap behind it) -->
+<path fill="#232328" d="M150 108C147 95 150 76 159 62C166 51 176 40 188 32L210 49C199 56 190 64 182 74C174 84 170 97 168 109C164 113 154 113 150 108Z"/>
+<path class="signal-main" d="M150 108C147 95 150 76 159 62C166 51 176 40 188 32"/>
+<path class="signal-main" d="M168 109C170 97 174 84 182 74C190 64 199 56 210 49"/>
+<path class="signal-main" d="M150 108C154 113 164 113 168 109"/>
+<path class="signal-ghost" d="M156 103C159 101 163 101 165 103"/>
+<path class="signal-ghost" d="M162 80C166 82 171 82 175 79"/>
+<!-- thumb, from the left, gripping the knob's side -->
+<path fill="#232328" d="M64 118C82 112 100 112 118 116C125 119 127 129 120 132C104 134 86 136 66 138Z"/>
+<path class="signal-main" d="M64 118C82 112 100 112 118 116"/>
+<path class="signal-main" d="M66 138C86 136 104 134 120 132"/>
+<path class="signal-main" d="M118 116C125 119 127 129 120 132"/>
+<path class="signal-ghost" d="M110 119C107 122 107 127 110 129"/>
+<path class="signal-ghost" d="M88 115C87 121 88 130 90 136"/>
+<!-- the shake at the base: the detent that slips as the knob is let go -->
+<path class="signal-secondary" d="M204 140L210 137M207 147L214 146M204 153L210 156"/>
+<path class="signal-secondary" d="M116 147L110 150M120 153L114 158"/>
+<path class="signal-ghost" d="M200 133Q214 143 200 158"/>
+<path class="signal-ghost" d="M206 129Q224 143 206 162"/>
+<circle class="signal-dot" cx="224" cy="168" r="2.2"/>
+<text x="230" y="171">SLIP IGNORED</text>
+<text x="208" y="28">PRESS: CLEAR LOCK</text>
+<text x="18" y="171">TRIG HELD</text>
+</svg>

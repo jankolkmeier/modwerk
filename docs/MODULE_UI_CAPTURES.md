@@ -107,6 +107,12 @@ that fact in `access.noUiReason`, keep `screenshots` empty and document its
 actual host/device access steps. Owner review verifies this narrow exception;
 do not invent a menu or use unrelated stock pages as evidence.
 
+A module that only changes how stock controls behave, with no page and
+nothing drawn (Butter Fingers drops knob turns while a lock is edited), is not
+covered by `access.noUiReason`, which the contract allows only for automatic
+USB modules. Until the owner sets a rule, keep its `screenshots` empty in the
+draft, describe the gesture in `access.steps`, and say so in the pull request.
+
 ## Headless capture workflow
 
 Use a reviewed, locally built `ot_emu` and a local MAIN OS build from your own

@@ -29,7 +29,7 @@ export async function syncPublishedReleases({ inventoryPath, apiUrl, requestUrl,
     if (result?.ok) {
       const summary = await result.json()
       if (!Number.isInteger(summary.checked) || summary.checked < 0 || !Number.isInteger(summary.notified) || summary.notified < 0) throw new Error('The release sync response was invalid.')
-      log('Release notifications: checked ' + summary.checked + ' published modules; queued ' + summary.notified + ' follower updates. Email preferences and digest timing are unchanged.')
+      log('Release notifications: checked ' + summary.checked + ' published modules; queued ' + summary.notified + ' follower updates' + (summary.held ? '; holding ' + summary.held + ' author releases for 48 hours' : '') + '. Email preferences and digest timing are unchanged.')
       return summary
     }
     if (result && ![403, 404, 409, 429, 500, 502, 503, 504].includes(result.status)) break

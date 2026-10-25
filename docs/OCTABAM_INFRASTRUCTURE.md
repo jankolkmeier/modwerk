@@ -35,3 +35,9 @@ Validation also covers SDK regression tests, all 312 vendor assembler tests and 
 Modwerk keeps its three adaptations: `main.cpp`'s independent scenario block-dump streams and per-child audio capture, `test_periph.cpp`'s injected media-exhaustion case, and the Makefile's `OCTABAM_STATIC_STOCK`, mailbox and gate set.
 
 Validation: the vendored emulator built from the origin/main sources and from this import under GCC 15.2 (WSL2), five firmware-free CTest targets passed (three before: `periph` gained the plug/unplug and media-exhaustion cases), `dsp_host.cpp` compiles against the vendored dsp56300 headers, the gate tests and the import-identity tests pass, and `modules:check` refuses a planted `rep` in a platform source. Software checks only: no stock image was booted under the port and no hardware ran.
+
+## Third import: docs (octabam `30fbb8e4`, 25 October 2026)
+
+[The third record](../sdk/imports/octabam-docs-30fbb8e4.json) pins four documents to [sambanks/octabam `30fbb8e4`](https://github.com/sambanks/octabam/tree/30fbb8e404cdc0ba59b26f34cdfb90dad588687b), byte for byte, and no code or build input: `docs/TRAPS.md` (two entries newer than the second import: a frame count past $7fffff, and EP0 replies), `docs/FAILURE_MODES.md` and `docs/HARDWARE_MATRIX.md` from upstream's `docs/contributing/`, and `docs/MIDI_TRACKS.md` from its `docs/firmware/` (kept beside TRAPS.md: the repository ignores every `firmware/` folder). `docs/remixer/FAILURE_MODES.md` stays Modwerk's own register and points to the new copy.
+
+Review: none of the four carries a hex string of 8 bytes or more found in the original 1.40C MAIN OS, nor an instruction listing; MIDI_TRACKS.md gives record layouts and addresses and quotes two single stock instructions by address. `sdk/tests/test_infrastructure_regressions.py` checks each file against the record and lets the newer TRAPS.md replace the second import's copy.
