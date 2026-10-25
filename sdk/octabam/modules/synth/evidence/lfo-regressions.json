@@ -45,7 +45,7 @@
  },
  "hardware": {
   "status": "reported",
-  "tester": "jankolkmeier",
+  "tester": "Jan Kolkmeier (@jankolkmeier)",
   "date": "2026-10-24",
   "unit": "Octatrack MKII, OS 1.40C, flashed beta base cd39c494, over USB",
   "set": [
